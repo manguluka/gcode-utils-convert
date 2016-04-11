@@ -4,10 +4,6 @@ var paper = require('paper');
 var canvas = new paper.Canvas(26, 26);
 paper.setup(canvas);
 
-let config = {
-  pixelSize: options.toolDiameter || 0.15
-}
-
 function preamble(input,options){
   let feedRate = options.feed || 3000;
   return `G21 G90\nG1 F${feedRate}\n`
@@ -34,7 +30,7 @@ function convertRaster(raster,options){
   for (var y = 0; y < height; y++) {
     for (var x = 0; x < width; x++) {
       let intensity = getIntensity(raster,x,y)
-      let xOffset = direction * config.pixelSize
+      let xOffset = direction * options.toolDiameter
       if(intensity > 0){
         doc.spindleOn(intensity)
         doc.linearX(xOffset)
@@ -48,13 +44,13 @@ function convertRaster(raster,options){
     direction = -direction
 
     //Go to next row
-    doc.linearY(-config.pixelSize)
+    doc.linearY(-options.toolDiameter)
   }
   return doc
 }
 
-export default function convert(input,options,callback){
-  console.log(input);
+export default function convert(input,options={},callback){
+  options.toolDiameter = options.toolDiameter || 0.15
   var raster = new paper.Raster(input);
   raster.onLoad = () => {
     let doc = convertRaster(raster,options)

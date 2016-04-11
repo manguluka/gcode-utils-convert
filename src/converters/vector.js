@@ -16,8 +16,6 @@ function postamble(input,options){
   return `G0 X0 Y0`
 }
 
-gctx.toolDiameter = 0.2
-
 gctx.fill = function(windingRule, depth) {
   gctx.save()
   gctx.strokeStyle = gctx.fillStyle
@@ -27,6 +25,11 @@ gctx.fill = function(windingRule, depth) {
 
 //Mirrored Y in gcanvas workaround
 gctx.map('x-yz');
+// let minimum = 0
+// doc.filter(function(p) {
+//   // flip_y_moves
+//   console.log(p.y);
+// });
 
 // Correctly mirror in positive y-axis
 // let minimum = getMinumum(doc)
@@ -38,6 +41,7 @@ gctx.map('x-yz');
 // });
 
 export default function convert(input, options, callback){
+  gctx.toolDiameter = options.toolDiameter || 0.15
   var svg = ''+fs.readFileSync(input)
   canvg(gctx.canvas, svg)
 
