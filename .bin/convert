@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+var convert =  require('../lib').default
+var fs = require('fs')
+var program = require('commander')
+var options = {}
+
+program
+  .version(require('../package.json').version)
+  .usage('[options] <file ...>')
+  .option('-f, --feed <number>', 'feed rate', eval)
+  .option('-t, --fileType <string>', 'file type of input(needed if using stdin)')
+  .option('-d, --toolDiameter <number>', 'diameter of tool', eval)
+
+program.parse(process.argv);
+
+if(program.feed) options.feed = program.feed;
+if(program.fileType) options.fileType = program.fileType;
+if(program.toolDiameter) options.toolDiameter = program.toolDiameter;
+
+function run(input) {
+  convert(input, options, function(err, doc){
+    console.log(doc.toString());
+  })
+}
+
+if(program.args.length === 0 && process.stdin.isTTY) {
+  program.outputHelp();
+  process.exit(0);
+}
+
+if(!process.stdin.isTTY) {
+  run('/dev/stdin');
+}
+
+program.args.forEach(function(file) {
+  run(file);
+});
+
+process.exit()
