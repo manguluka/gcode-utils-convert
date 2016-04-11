@@ -7,9 +7,9 @@ var options = {}
 program
   .version(require('../package.json').version)
   .usage('[options] <file ...>')
-  .option('-f, --feed <number>', 'feed rate', eval)
+  .option('-f, --feed <number>', 'feed rate', eval, 3000)
   .option('-t, --fileType <string>', 'file type of input(needed if using stdin)')
-  .option('-d, --toolDiameter <number>', 'diameter of tool', eval)
+  .option('-d, --toolDiameter <number>', 'diameter of tool', eval, 0.15)
 
 program.parse(process.argv);
 
